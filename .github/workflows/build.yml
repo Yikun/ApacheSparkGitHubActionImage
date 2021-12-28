@@ -3,6 +3,8 @@ name: ci
 on:
   push:
     branches: main
+  pull_request:
+    branches: main
 
 jobs:
   main:
@@ -26,7 +28,15 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: dongjoon/apache-spark-github-action-image:latest
+          tags: yikunkero/apache-spark-github-action-image:latest
+      -
+        name: Build and push
+        id: docker_build_arm
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          tags: yikunkero/apache-spark-github-action-image:arm64
+          platforms: linux/arm64
       -
         name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
