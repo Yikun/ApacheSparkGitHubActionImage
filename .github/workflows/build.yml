@@ -35,6 +35,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
+          file: ./Dockerfile-arm64
           tags: yikunkero/apache-spark-github-action-image:arm64
           platforms: linux/arm64
       -
