@@ -32,3 +32,12 @@ RUN curl -sS https://bootstrap.pypa.io/get-pip.py | python3.8
 RUN python3.8 -m pip install numpy pyarrow pandas scipy xmlrunner plotly>=4.8 sklearn 'mlflow>=1.0'
 RUN curl -sS https://bootstrap.pypa.io/get-pip.py | python3.9
 RUN python3.9 -m pip install numpy pyarrow pandas scipy xmlrunner plotly>=4.8 sklearn 'mlflow>=1.0'
+
+RUN add-apt-repository ppa:pypy/ppa
+RUN apt update
+RUN $APT_INSTALL pypy3 gfortran libopenblas-dev liblapack-dev
+
+RUN $APT_INSTALL build-essential pypy3-dev
+RUN curl -sS https://bootstrap.pypa.io/get-pip.py | pypy3
+RUN pypy3 -m pip install -U pip setuptools
+RUN pypy3 -m pip install numpy pandas scipy
