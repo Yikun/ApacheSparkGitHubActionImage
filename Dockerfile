@@ -28,8 +28,14 @@ RUN apt-get update
 RUN $APT_INSTALL software-properties-common git libxml2-dev pkg-config curl wget openjdk-8-jdk libpython3-dev python3-pip python3-setuptools python3.8 python3.9
 RUN update-alternatives --set java /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java
 
-RUN curl -sS https://bootstrap.pypa.io/get-pip.py | python3.9
-RUN python3.9 -m pip install numpy pyarrow 'pandas<1.4.0' scipy xmlrunner plotly>=4.8 sklearn 'mlflow>=1.0' coverage matplotlib
+RUN $APT_INSTALL gnupg ca-certificates pandoc
+RUN echo 'deb https://cloud.r-project.org/bin/linux/ubuntu focal-cran40/' >> /etc/apt/sources.list
+RUN gpg --keyserver keyserver.ubuntu.com --recv-key E298A3A825C0D65DFD57CBB651716619E084DAB9
+RUN gpg -a --export E084DAB9 | apt-key add -
+RUN add-apt-repository 'deb https://cloud.r-project.org/bin/linux/ubuntu focal-cran40/'
+RUN apt update
+RUN $APT_INSTALL r-base libcurl4-openssl-dev qpdf libssl-dev zlib1g-dev
+RUN Rscript -e "install.packages(c('knitr', 'markdown', 'rmarkdown', 'testthat', 'devtools', 'e1071', 'survival', 'arrow', 'roxygen2', 'xml2'), repos='https://cloud.r-project.org/')"
 
 RUN add-apt-repository ppa:pypy/ppa
 RUN apt update
@@ -39,11 +45,5 @@ RUN $APT_INSTALL build-essential pypy3-dev
 RUN curl -sS https://bootstrap.pypa.io/get-pip.py | pypy3
 RUN pypy3 -m pip install numpy 'pandas<1.4.0' scipy coverage matplotlib
 
-RUN $APT_INSTALL gnupg ca-certificates pandoc
-RUN echo 'deb https://cloud.r-project.org/bin/linux/ubuntu focal-cran40/' >> /etc/apt/sources.list
-RUN gpg --keyserver keyserver.ubuntu.com --recv-key E298A3A825C0D65DFD57CBB651716619E084DAB9
-RUN gpg -a --export E084DAB9 | apt-key add -
-RUN add-apt-repository 'deb https://cloud.r-project.org/bin/linux/ubuntu focal-cran40/'
-RUN apt update
-RUN $APT_INSTALL r-base libcurl4-openssl-dev qpdf libssl-dev zlib1g-dev
-RUN Rscript -e "install.packages(c('knitr', 'markdown', 'rmarkdown', 'testthat', 'devtools', 'e1071', 'survival', 'arrow', 'roxygen2', 'xml2'), repos='https://cloud.r-project.org/')"
+RUN curl -sS https://bootstrap.pypa.io/get-pip.py | python3.9
+RUN python3.9 -m pip install numpy pyarrow 'pandas<1.4.0' scipy xmlrunner plotly>=4.8 sklearn 'mlflow>=1.0' coverage matplotlib
