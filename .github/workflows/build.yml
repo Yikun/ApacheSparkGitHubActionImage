@@ -38,7 +38,7 @@ jobs:
           push: true
           tags: yikunkero/apache-spark-github-action-image-local:latest
           cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
+          cache-to: type=registry,ref=yikunkero/apache-spark-github-action-image:cache
       -
         name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
